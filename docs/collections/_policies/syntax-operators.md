@@ -943,31 +943,20 @@ Function that evaluates to `true` if the operand is a member of the receiver on 
 #### Examples:
 {: .no_toc }
 
-Examples labeled with `//error` both fail to evaluate and fail to validate. Examples that evaluate to a result may fail to validate; they are labeled accordingly, with discussion below.
+Examples labeled with `//error` both fail to evaluate and fail to validate. Examples that evaluate to a result may fail to validate.
 
 ```cedar
-[1,2,3].contains(1)                             //true (validates)
-[1,"something",2].contains(1)                   //true (does not validate: heterogeneous set)
-[1,"something",2].contains("Something")         //false - string comparison is case-sensitive (does not validate: heterogeneous set)
-["some", "useful", "tags"].contains("useful")   //true (validates)
-[].contains(100)                                //false (does not validate: has empty-set literal)
-context.role.contains("admin")                  //true if the `context.role` set contains string "admin" (validates)
-[User::"alice"].contains(principal)             //true if principal == User::"alice" (validates)
-"ham and ham".contains("ham")                   //error - 'contains' is not allowed on strings
+[1,2,3].contains(1)                             // Evaluates: true // Validates: true
+[1,"something",2].contains(1)                   // Evaluates: true // Validates: false (heterogeneous set)
+[1,"something",2].contains("Something")         // Evaluates: false (string comparison is case-sensitive) // Validates: false (heterogeneous set)
+["some", "useful", "tags"].contains("useful")   // Evaluates: true // Validates: true
+[].contains(100)                                // Evaluates: false // Validates: false (has empty-set literal)
+context.role.contains("admin")                  // Evaluates: true (if the `context.role` set contains string "admin") // Validates: true
+[User::"alice"].contains(principal)             // Evalutes: true (if principal == User::"alice") // Validates: true
+"ham and ham".contains("ham")                   // error - 'contains' is not allowed on strings
 ```
 
-| Example                                                  | Evaluates | Evaluation note                                   | Validates | Validation note       |
-| -------------------------------------------------------- | --------- | ------------------------------------------------- | --------- | --------------------- |
-| `[1,2,3].contains(1)`{:.cedar}                           | true      |                                                   | true      |                       |
-| `[1,"something",2].contains(1)`{:.cedar}                 | true      |                                                   | false     | heterogeneous set     |
-| `[1,"something",2].contains("Something")`{:.cedar}       | false     | string comparison is case-sensitive               | false     | heterogeneous set     |
-| `["some", "useful", "tags"].contains("useful")`{:.cedar} | true      |                                                   | true      |                       |
-| `[].contains(100)`{:.cedar}                              | false     |                                                   | false     | has empty-set literal |
-| `context.role.contains("admin")`{:.cedar}                | true      | if the `context.role` set contains string "admin" | true      |                       |
-| `[User::"alice"].contains(principal)`{:.cedar}           | true      | if principal == User::"alice"                     | true      |                       |
-| `"ham and ham".contains("ham")`{:.cedar}                 | error     | `contains` is not allowed on strings              |           |                       |
-
-The second, third, fifth examples above evaluate to a result but do not validate. The second and third operate on a set that contains values of multiple types rather than a single type, the fifth operates on the empty set literal; none of these is a valid set (see discussion of [valid sets](syntax-datatypes.html#datatype-set) for more info).
+A *heterogeneous set*, as shown in several examples, contains more than one type. None of the `validates: false` examples is a valid set. See [valid sets](syntax-datatypes.html#datatype-set) for more info.
 
 ### `.containsAll()` \(all element set membership test\) {#function-containsAll}
 
