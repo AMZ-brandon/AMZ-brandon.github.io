@@ -956,16 +956,16 @@ context.role.contains("admin")                  //true if the `context.role` set
 "ham and ham".contains("ham")                   //error - 'contains' is not allowed on strings
 ```
 
-| Example    | Evaluates | Evaluation note      | Validates | Validation note       |
-| ---------- | --------- | -------------------- | --------- | --------------------- |
-| `[1,2,3].contains(1)`{:.cedar} | true | | true | |
-| `[1,"something",2].contains(1)`{:.cedar} | true | false | heterogeneous set |
-| `[1,"something",2].contains("Something")`{:.cedar} | false | string comparison is case-sensitive | false | heterogeneous set |
-| `["some", "useful", "tags"].contains("useful")`{:.cedar} | true | | true | |
-| `[].contains(100)`{:.cedar} | false | | false | has empty-set literal |
-| `context.role.contains("admin")`{:.cedar} | true | if the `context.role` set contains string "admin" | true | |
-| `[User::"alice"].contains(principal)`{:.cedar} | true | if principal == User::"alice" | true | |
-| `"ham and ham".contains("ham")`{:.cedar} | error | `contains` is not allowed on strings | | |
+| Example                                                  | Evaluates | Evaluation note                                   | Validates | Validation note       |
+| -------------------------------------------------------- | --------- | ------------------------------------------------- | --------- | --------------------- |
+| `[1,2,3].contains(1)`{:.cedar}                           | true      |                                                   | true      |                       |
+| `[1,"something",2].contains(1)`{:.cedar}                 | true      |                                                   | false     | heterogeneous set     |
+| `[1,"something",2].contains("Something")`{:.cedar}       | false     | string comparison is case-sensitive               | false     | heterogeneous set     |
+| `["some", "useful", "tags"].contains("useful")`{:.cedar} | true      |                                                   | true      |                       |
+| `[].contains(100)`{:.cedar}                              | false     |                                                   | false     | has empty-set literal |
+| `context.role.contains("admin")`{:.cedar}                | true      | if the `context.role` set contains string "admin" | true      |                       |
+| `[User::"alice"].contains(principal)`{:.cedar}           | true      | if principal == User::"alice"                     | true      |                       |
+| `"ham and ham".contains("ham")`{:.cedar}                 | error     | `contains` is not allowed on strings              |           |                       |
 
 The second, third, fifth examples above evaluate to a result but do not validate. The second and third operate on a set that contains values of multiple types rather than a single type, the fifth operates on the empty set literal; none of these is a valid set (see discussion of [valid sets](syntax-datatypes.html#datatype-set) for more info).
 
