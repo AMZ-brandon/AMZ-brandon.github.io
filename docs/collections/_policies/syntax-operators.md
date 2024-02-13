@@ -480,7 +480,7 @@ true && 3                                   //error -- second operand is not a B
 (false && 3) == 3                           //Evaluates to false //Doesn't validate (== applied to different types)
 ```
 
-As mentioned above, validation _sometimes_ is able to account for short-circuiting behavior, but not always. In particular, the validator will accept `false && 3` (second example) and `(User::"alice" == Action::"viewPhoto") && 3` (fourth example), but not `(3 == 4) && 3` (third example). The reason is that it knows `false` is always, well, `false`, so it can model short-circuiting. It also knows that comparing two entities with different types will always evaluate to to `false`. Internally, the validator has a type `False` for expressions that  surely evaluate to `false`, and also a type `True` for those that surely evaluate to `true`. So, `false` has type `False`, as does `(User::"alice" == Action::"viewPhoto")`. And so does expression `e1 && e2` when `e1` has type `False`. However, expression `3 == 4` has type `Boolean` (the validator does not look at the values of the literals), so the validator will not short-circuit when considering `(3 == 4) && e2` -- it will require that `e2` has type `Boolean` (or `True` or `False`).
+As mentioned above, validation _sometimes_ is able to account for short-circuiting behavior, but not always. In particular, the validator will accept `false && 3` and `(User::"alice" == Action::"viewPhoto") && 3`, but not `(3 == 4) && 3`. The reason is that it knows `false` is always, well, `false`, so it can model short-circuiting. It also knows that comparing two entities with different types will always evaluate to to `false`. Internally, the validator has a type `False` for expressions that  surely evaluate to `false`, and also a type `True` for those that surely evaluate to `true`. So, `false` has type `False`, as does `(User::"alice" == Action::"viewPhoto")`. And so does expression `e1 && e2` when `e1` has type `False`. However, expression `3 == 4` has type `Boolean` (the validator does not look at the values of the literals), so the validator will not short-circuit when considering `(3 == 4) && e2` -- it will require that `e2` has type `Boolean` (or `True` or `False`).
 
 ### `||` \(OR\) {#operator-or}
 
@@ -520,7 +520,7 @@ false || 3                 //error (second operand not a Boolean)
 (3 == 3) || 3              //Evaluates to true (due to short-circuiting) //Doesn't validate
 ```
 
-As mentioned above, validation _sometimes_ is able to account for short-circuiting behavior, but not always. In particular, the validator will accept `true || 3` (second example) but not `(3 == 3) && 3` (fourth example). As discussed for [`&&`](#operator-and), the validator has an internal type `True` for expressions that surely evaluate to `true`, and similarly for `False`, and it uses these types to implement a short-circuiting semantics for `&&` and `||`. Here, the expression `3 == 3` has type `Boolean` (the validator does not look at the values of the literals), so the validator will not short-circuit when considering `(3 == 3) && e2` -- it will require that `e2` has type `Boolean` (or `True` or `False`).
+As mentioned above, validation _sometimes_ is able to account for short-circuiting behavior, but not always. In particular, the validator will accept `true || 3` but not `(3 == 3) && 3`. As discussed for [`&&`](#operator-and), the validator has an internal type `True` for expressions that surely evaluate to `true`, and similarly for `False`, and it uses these types to implement a short-circuiting semantics for `&&` and `||`. Here, the expression `3 == 3` has type `Boolean` (the validator does not look at the values of the literals), so the validator will not short-circuit when considering `(3 == 3) && e2` -- it will require that `e2` has type `Boolean` (or `True` or `False`).
 
 ### `!` \(NOT\) {#operator-not}
 
@@ -599,7 +599,7 @@ if false then (1 && "hello") else "ok"   //Evaluates to "ok" (due to short circu
 if true then (1 && "hello") else "ok"    //error
 ```
 
-Considering the examples from the perspective of validation, the first example is valid because the first operand `1 == 1` has `Boolean` type, and both the second and third operands have the same type (`String`). The second example is rejected because the second and third operands do not have the same type. The third example is rejected because first operand `1` does not have type `Boolean`. The fourth example is _accepted_ because the validator is able to consider short-circuiting: It knows that because the first operand is `false` that the second operand _must_ be skipped. It does this by giving `false` the internal type `False` as described for operators [`&&`](#operator-and) and [`||`](#operator-or). Note that it is not able to give the expression `1 == 2` type `False` in the second example; if it was, then this example would be accepted despite the last two operands not having the same type.
+The example `if 1 == 1 then "ok" else "wrong"` validates because the first operand `1 == 1` has `Boolean` type, and both the second and third operands have the same type (`String`). The example `if 1 == 2 then User::"foo" else "ok"` doesn't validate because the second and third operands do not have the same type. The example `if 1 then "wrong" else "wrong"` doesn't validate because the first operand `1` does not have type `Boolean`. The example `if false then (1 && "hello") else "ok"` is _accepted_ (validates) because the validator is able to consider short-circuiting: It knows that because the first operand is `false` that the second operand _must_ be skipped. It does this by giving `false` the internal type `False` as described for operators [`&&`](#operator-and) and [`||`](#operator-or). Note that it is not able to give the expression `1 == 2` type `false` in the second example; if it was, then this example would be accepted despite the last two operands not having the same type.
 
 ## Arithmetic operators {#operators-math}
 
@@ -662,7 +662,7 @@ In the following examples, those labeled with `//error` both fail to evaluate *a
 7 - "3"                         //error - second operand not a `Long` //Doesn't validate
 ```
 
-Since the `-` symbol can mean both unary and binary subtraction, the third example must use parentheses to disambiguate.
+Because the `-` symbol can mean both unary and binary subtraction, the example `-9223372036854775807 - 2 + 3` must use parentheses to disambiguate.
 
 ### `*` \(Numeric multiplication\) {#operator-multiply}
 
