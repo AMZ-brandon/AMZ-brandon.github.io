@@ -9,6 +9,9 @@ plugins:
 - jekyll-remote-theme 
 - jekyll-default-layout #
 
+# Add ref to awsstyle.scss
+color_scheme: awsstyle
+
 # GitHub edit and feedback links
 gh_edit_link: true # show or hide edit this page link
 gh_edit_link_text: "We welcome your feedback. You can edit this page on GitHub."
