@@ -4,9 +4,10 @@ title: Cedar Policy Language Reference Guide
 locale: en_US
 logo: images/Cedar1-green.png
 
-remote_theme: cotes2020/jekyll-theme-chirpy
+remote_theme: just-the-docs/just-the-docs
 plugins:
-- jekyll-remote-theme #
+- jekyll-remote-theme 
+- jekyll-default-layout #
 
 # GitHub edit and feedback links
 gh_edit_link: true # show or hide edit this page link
